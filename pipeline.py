@@ -10,6 +10,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from data_loaders import load_data
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,13 @@ def main():
 
     if not validate_input(args.input):
         sys.exit(1)
+
+    try:
+        data = load_data(args.input)
+    except ValueError as error:
+        logger.error(error)
+        sys.exit(1)
+
 
 
 if __name__ == "__main__":
