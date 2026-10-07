@@ -30,12 +30,13 @@ def handle_missing(df, axis="rows"):
 def remove_outliers(df, columns, method, threshold):
     """Remove outliers from the specified numeric columns."""
     if method not in ["iqr", "zscore"]:
+        logger.error(f"Unsupported outlier method: {method}")
         raise ValueError(f"Method not accepted: {method}")
 
     start_rows = len(df)
     for col in columns:
         if col not in df:
-            logger.error(f"{col} does not exist in this dataframe")
+            logger.warning(f"{col} does not exist in this dataframe")
             continue
 
         if not pd.api.types.is_numeric_dtype(df[col]):
@@ -43,8 +44,8 @@ def remove_outliers(df, columns, method, threshold):
             continue
 
         if method == "iqr":
-            q1 = df[col].quartile(0.25)
-            q3 = df[col].quartile(0.25)
+            q1 = df[col].quantile(0.25)
+            q3 = df[col].quantile(0.75)
             iqr = q3-q1
             lower = q1 - threshold * iqr
             upper = q3 + threshold * iqr
@@ -63,21 +64,22 @@ def remove_outliers(df, columns, method, threshold):
 
 def process_data(df, config):
     """Apply the processing steps enabled in the configuration."""
-
     processing = config.get("processing", {})
+
 
     if processing.get("remove_duplicates"):
         df = remove_duplicates(df)
 
-    if processing.get("missing").get("enabled"):
-        ax = processing.get("missing")
+    if processing.get("missing", {}).get("enabled"):
+        ax = processing.get("missing", {}).get("axis")
         df = handle_missing(df, ax)
 
 
-    if processing.get("outliers").get("enabled"):
-        cols = processing.get("outliers").get("columns")
-        method = processing.get("outliers").get("method")
-        threshold = processing.get("outliers").get("threshold")
+    if processing.get("outliers", {}).get("enabled"):
+    
+        cols = processing.get("outliers", {}).get("columns")
+        method = processing.get("outliers", {}).get("method")
+        threshold = processing.get("outliers", {}).get("threshold")
 
         df = remove_outliers(df, cols, method, threshold)
 
