@@ -45,5 +45,3 @@ Logger output:
 20:30:12 INFO     src.data_output - 92 rows saved to output/clean.csv\
 20:30:12 INFO     __main\__ - Saved cleaned data to output/clean.csv\
 
-Example for output file is in output/clean.csv
-
