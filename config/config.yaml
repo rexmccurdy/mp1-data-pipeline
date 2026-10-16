@@ -9,8 +9,8 @@ processing:
     enabled: true
     columns:
       - rating
-    method: "iqr"
-    threshold: 1.5
+    method: "zscore"
+    threshold: 3
 
 validation:
   required_columns: [record_id,name,rating,category,status]

@@ -6,7 +6,8 @@ def test_validate_dataframe_removes_invalid_ratings(sample_df):
     numeric = ["rating"]
     out = validate_dataframe(sample_df, required_columns=required, numeric_columns=numeric)
 
-    assert out.shape == (98, 5)
+    assert len(out) == 98
+    assert out.columns.tolist() == required
     # TODO: Set the required and numeric column names.
     # TODO: Call validate_dataframe().
     # TODO: Assert that 98 rows remain and all five columns are preserved.
